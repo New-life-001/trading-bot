@@ -60,18 +60,15 @@
 </div>
 
 <script>
-async function getSignal() {
-    document.getElementById("signalText").innerHTML = "Analyzing...";
+function getSignal() {
 
-    try {
-        let response = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD");
-        let data = await response.json();
+    let signalText = document.getElementById("signalText");
+    signalText.innerHTML = "Analyzing...";
+    signalText.className = "signal";
 
-        let rate = data.rates.USD;
+    setTimeout(() => {
 
         let random = Math.random();
-
-        let signalText = document.getElementById("signalText");
 
         if (random > 0.5) {
             signalText.innerHTML = "BUY ↑";
@@ -81,11 +78,9 @@ async function getSignal() {
             signalText.className = "signal sell";
         }
 
-    } catch (error) {
-        document.getElementById("signalText").innerHTML = "Error loading data";
-    }
+    }, 1500);
+
 }
 </script>
-
 </body>
 </html>
