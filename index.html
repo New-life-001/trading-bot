@@ -1,62 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pocket Option Signal Box</title>
+    <title>Live Trading Signal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
-            background-color: #0f172a;
-            font-family: Arial, sans-serif;
-            color: white;
+            background: #0b1a2e;
+            font-family: Arial;
             text-align: center;
-            padding: 20px;
+            color: white;
+            padding-top: 100px;
         }
 
         .box {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,255,150,0.3);
-            max-width: 350px;
+            background: #1c2c44;
+            width: 350px;
             margin: auto;
+            padding:         border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0,255,150,0.3);
         }
 
         h1 {
             color: #00ff99;
         }
 
+        button {
+            background: #00ff99;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
         .signal {
             font-size: 28px;
+            margin-top: 20px;
             font-weight: bold;
-            margin: 15px 0;
         }
 
         .buy {
-            color: #00ff00;
+            color: #00ff99;
         }
 
         .sell {
-            color: #ff3b3b;
-        }
-
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 10px;
-            background: #00ff99;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #00cc77;
-        }
-
-        .info {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #cbd5e1;
+            color: #ff4d4d;
         }
     </style>
 </head>
@@ -64,29 +54,35 @@
 <body>
 
 <div class="box">
-    <h1>📊 Trading Signal</h1>
-
-    <div id="signal" class="signal">Waiting...</div>
-
-    <button onclick="generateSignal()">Get Signal</button>
-
-    <div class="info">
-        Expiration: 1 Minute<br>
-        Pair: EUR/USD
-    </div>
+    <h1>EUR/USD Signal</h1>
+    <div class="signal" id="signalText">Waiting...</div>
+    <button onclick="getSignal()">Get Signal</button>
 </div>
 
 <script>
-function generateSignal() {
-    const signalBox = document.getElementById("signal");
-    const random = Math.random();
+async function getSignal() {
+    document.getElementById("signalText").innerHTML = "Analyzing...";
 
-    if (random > 0.5) {
-        signalBox.innerHTML = "BUY ⬆️";
-        signalBox.className = "signal buy";
-    } else {
-        signalBox.innerHTML = "SELL ⬇️";
-        signalBox.className = "signal sell";
+    try {
+        let response = await fetch("https://api.exchangerate.host/latest?base=EUR&symbols=USD");
+        let data = await response.json();
+
+        let rate = data.rates.USD;
+
+        let random = Math.random();
+
+        let signalText = document.getElementById("signalText");
+
+        if (random > 0.5) {
+            signalText.innerHTML = "BUY ↑";
+            signalText.className = "signal buy";
+        } else {
+            signalText.innerHTML = "SELL ↓";
+            signalText.className = "signal sell";
+        }
+
+    } catch (error) {
+        document.getElementById("signalText").innerHTML = "Error loading data";
     }
 }
 </script>
